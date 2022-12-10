@@ -21,8 +21,8 @@ const MangaRead = ({ title, currentChapter, isReading, setIsReading }) => {
           <Container maxWidth="md" sx={{ backgroundColor: "#444", py: 3 }}>
             {currentChapter &&
               currentChapter.pages.map((page, idx) => (
-                <Box id={`${idx}--${page}`}>
-                  <img width="100%" src={`${PAGE_PATH}/${page}`} />
+                <Box key={`${page}--${id}`} id={`${idx}--${page}`}>
+                  <img width="100%" src={`${PAGE_PATH}/${page}`} alt={page} />
                 </Box>
               ))}
           </Container>

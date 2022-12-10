@@ -49,6 +49,7 @@ const Manga = ({ manga }) => {
           <MangaSelection>
             {manga.chapters.map((chapter, idx) => (
               <MangaThumbnail
+                key={idx}
                 idx={idx}
                 isChapter={true}
                 cover={getChapterCover(chapter)}

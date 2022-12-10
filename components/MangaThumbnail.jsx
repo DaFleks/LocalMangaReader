@@ -11,7 +11,7 @@ const MangaThumbnail = ({ id, idx, title, cover, count, readChapter, isChapter }
     <Grid item xs={12} sm={4} md={3}>
       <Link href={isChapter ? "javascript:void(0)" : id} onClick={isChapter ? handleCurrentChapter : () => {}}>
         <Paper variant="elevation" elevation={12} sx={{ display: "flex" }}>
-          <img src={`${MANGA_PATH}${cover}`} alt={title} width="100%" style={{ objectFit: "cover", height: "25rem" }} />
+          <img src={`${MANGA_PATH}${cover}`} alt={title} width="100%" style={{ objectFit: "cover", height: "25rem" }}/>
         </Paper>
       </Link>
 
