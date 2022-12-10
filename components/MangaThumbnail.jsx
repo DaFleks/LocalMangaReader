@@ -1,17 +1,7 @@
-import { Grid, Card, CardMedia, CardContent, Typography, CardActions, Button, Divider } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Grid, Paper, Link, Typography } from "@mui/material";
 
 const MangaThumbnail = ({ id, idx, title, cover, count, toggleCurrentManga, toggleReadChapter, isChapter }) => {
   const MANGA_PATH = "./manga/";
-
-  const theme = createTheme();
-
-  theme.typography.h6 = {
-    fontSize: "1.0rem",
-    [theme.breakpoints.up("sm")]: {
-      fontSize: "1.25rem",
-    },
-  };
 
   const handleCurrentManga = () => {
     toggleCurrentManga(id);
@@ -22,45 +12,25 @@ const MangaThumbnail = ({ id, idx, title, cover, count, toggleCurrentManga, togg
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Grid item xs={6} sm={4} lg={3} xl={3}>
-        <Card sx={{ border: "1px solid #ddd" }}>
-          <CardMedia
-            component="img"
-            image={`${MANGA_PATH}${cover}`}
-            alt="Cover"
-            sx={{ objectFit: "contain", objectPosition: "top", maxHeight: "12rem" }}
-          />
-          <Divider color="#ddd" sx={{ mt: 1 }} />
-          <CardContent sx={{ minHeight: !isChapter && "9rem" }}>
-            <Typography gutterBottom variant="h6" component="div">
-              {title}
-            </Typography>
-            {isChapter ? (
-              <Typography variant="body2" color="text.secondary">
-                Chapter {count}
-              </Typography>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                {count} {count > 1 ? "Chapters" : "Chapter"}
-              </Typography>
-            )}
-          </CardContent>
-          <CardActions>
-            <Button
-              sx={{ fontWeight: "bold" }}
-              fullWidth={true}
-              onClick={isChapter ? handleCurrentChapter : handleCurrentManga}
-              size="small"
-              variant="contained"
-              color="primary"
-            >
-              Read Now
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-    </ThemeProvider>
+    <Grid item xs={12} sm={4} md={3}>
+      <Paper variant="elevation" elevation={12} sx={{ display: "flex" }} onClick={!isChapter ? handleCurrentManga : handleCurrentChapter}>
+        <img src={`${MANGA_PATH}${cover}`} alt={title} width="100%" style={{ objectFit: "cover", height: "25rem" }} />
+      </Paper>
+      <Link
+        underline="hover"
+        href="#"
+        variant="body1"
+        onClick={!isChapter ? handleCurrentManga : handleCurrentChapter}
+        mt={2}
+        ml={0.5}
+        sx={{ fontWeight: "bold", color: "#8dfc68", display: "block" }}
+      >
+        {title}
+      </Link>
+      <Typography onClick={isChapter && handleCurrentChapter} variant="body2" ml={0.5} sx={{ fontWeight: "bold", color: "#bbb" }}>
+        {!isChapter ? `${count} chapters` : `${count}`}
+      </Typography>
+    </Grid>
   );
 };
 

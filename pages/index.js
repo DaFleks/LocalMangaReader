@@ -1,19 +1,20 @@
 
-import { useState } from 'react';
-import { Container, Dialog, Typography, Button } from '@mui/material';
 import fs from 'fs';
+import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import MangaSelection from '../components/MangaSelection';
-import MangaThumbnail from '../components/MangaThumbnail';
-import { Box } from '@mui/system';
+import { Container, Dialog, Typography, AppBar, Box } from '@mui/material';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import HomeIcon from '@mui/icons-material/Home';
+import MangaSelection from '../components/MangaSelection';
+import MangaThumbnail from '../components/MangaThumbnail';
 
 export default function Home({ mangas }) {
+  //  State
   const [currentManga, setCurrentManga] = useState();
   const [currentChapter, setCurrentChapter] = useState();
   const [isReading, setIsReading] = useState(false);
 
+  //  Toggle Functions
   const toggleCurrentManga = (id) => {
     setCurrentManga(mangas.find(manga => manga.id === id));
   }
@@ -23,72 +24,75 @@ export default function Home({ mangas }) {
     setIsReading(true);
   }
 
+  //  Cover getters
+  const getSeriesCover = (series) => `${series.title}/${series.chapters[0].chapter}/${series.chapters[0].pages[0]}`;
+  const getChapterCover = (currentManga, idx) => `${currentManga.title}/${currentManga.chapters[idx].chapter}/${currentManga.chapters[idx].pages[0]}`
+
   return (
-    <>
-      <Container maxWidth="lg" sx={{ backgroundColor: '#ddd', minHeight: '100vh', py: 2 }}>
-        <Box pb={2} sx={{ color: '#c26b00', display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ backgroundColor: '#444' }}>
+      <AppBar position="fixed" sx={{ backgroundColor: '#222', py: 3 }}>
+        <Container sx={{ display: 'flex', alignItems: 'center' }}>
           {currentManga ? <ArrowLeftIcon onClick={() => setCurrentManga()} /> : <HomeIcon />}
-          <Typography variant="h5" sx={{ ml: 1 }}>{currentManga ? currentManga.title : 'Home'}</Typography>
-        </Box>
+          <Typography variant="h5" sx={{ ml: 1 }}>{currentManga ? currentManga.title : 'Local Manga'}</Typography>
+        </Container>
+      </AppBar>
+      <Container maxWidth="lg" sx={{ backgroundColor: '#666', minHeight: '100vh', pt: 12, pb: 2 }}>
         <MangaSelection>
           {!currentManga &&
             mangas.map((manga) =>
-              <>
-                <MangaThumbnail cover={manga.cover} key={manga.id} id={manga.id} title={manga.title}
-                  count={manga.chapterCount} toggleCurrentManga={toggleCurrentManga} />
-              </>
-            )
-          }
+              <MangaThumbnail key={manga.id} id={manga.id} title={manga.title} cover={getSeriesCover(manga)}
+                count={manga.nChapters} toggleCurrentManga={toggleCurrentManga} />)}
           {currentManga &&
-            <>
-              {currentManga.chapters.map((chapter, idx) =>
-                <MangaThumbnail isChapter={true} idx={idx} toggleReadChapter={toggleReadChapter} count={idx + 1}
-                  cover={`${currentManga.title}/${chapter.chapterNum}/${chapter.pages[0]}`} />)}
-            </>
-          }
+            currentManga.chapters.map((chapter, idx) =>
+              <MangaThumbnail key={idx} idx={idx} isChapter={true} toggleReadChapter={toggleReadChapter} count={chapter.chapter}
+                cover={getChapterCover(currentManga, idx)} />)}
         </MangaSelection>
       </Container>
-      {
-        isReading &&
+      {isReading &&
         <Dialog open={isReading} fullScreen={true}>
-          {currentChapter.pages.map(page => <img src={`./manga/${currentManga.title}/${currentChapter.chapterNum}/${page}`} />)}
-          <Box p={1} color="#c26b00" sx={{ position: 'sticky', bottom: 0, backgroundColor: '#444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ArrowLeftIcon />
-            <Typography onClick={() => setIsReading(false)} variant="h4">
-              Go Back
-            </Typography>
-          </Box>
-        </Dialog>
-      }
-    </>
+          <Container disableGutters maxWidth="md" sx={{ background: 'black' }}>
+            {currentChapter.pages.map(page =>
+              <img width="100%" src={`./manga/${currentManga.title}/${currentChapter.chapter}/${page}`} />
+            )}
+          </Container>
+          <AppBar position="sticky" sx={{ bottom: '0', py: 1, backgroundColor: '#222' }}>
+            <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+              <Typography variant="h6" onClick={() => setIsReading(false)}>{currentChapter.chapter} - Go Back</Typography>
+            </Container>
+          </AppBar>
+        </Dialog>}
+    </Box>
   )
 }
 
 export const getStaticProps = async () => {
-  let mangas = [];
-  //  Folder names are manga titles
-  fs.readdirSync("./public/manga").forEach((title) => {
-    mangas.push({ id: uuid(), title: title });
-  });
+  //  Path where all manga is stored.
+  const MANGA_PATH = './public/manga/';
 
-  mangas.forEach((manga) => {
-    manga.chapterCount = fs.readdirSync(`./public/manga/${manga.title}`).length;
+  //  Array to hold each manga object extracted from the path.
+  let mangas = [];
+
+  //  Read through every Manga title.
+  fs.readdirSync(MANGA_PATH).forEach((title) => {
+    //  Array to store chapter objects.
     let chapters = [];
 
-    fs.readdirSync(`./public/manga/${manga.title}`).forEach((chapter, idx) => {
-      chapters.push({ chapterNum: chapter, pages: [] });
-      manga.chapters = chapters;
-
+    //  Scan into each Manga folder and grab the chapters.
+    fs.readdirSync(`${MANGA_PATH}${title}`).forEach((chapter) => {
       let pages = [];
-      fs.readdirSync(`./public/manga/${manga.title}/${chapter}`).forEach((page, idx) => {
+
+      //  Scan into each Chapter folder and grab the image files within.
+      fs.readdirSync(`${MANGA_PATH}${title}/${chapter}`).forEach((page) => {
         pages.push(page);
       })
-      manga.chapters[idx].pages = pages;
+
+      //  Each completed chapter is pushed with the chapter number followed by the pages array.
+      chapters.push({ chapter, pages });
     })
 
-    manga.cover = `${manga.title}/${manga.chapters[0].chapterNum}/${manga.chapters[0].pages[0]}`;
-  })
-
+    //  For each title scanned, push the data into the Manga array along with a generated ID.
+    mangas.push({ id: uuid(), title: title, chapters: chapters, nChapters: chapters.length });
+  });
 
   return {
     props: { mangas },
