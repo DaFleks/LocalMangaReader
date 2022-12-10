@@ -5,7 +5,7 @@ import MangaSelection from "../components/MangaSelection";
 import MangaThumbnail from "../components/MangaThumbnail";
 import MangaRead from "../components/MangaRead";
 import MangaBreadcrumbs from "../components/MangaBreadcrumbs";
-import * as mangas from "../mangas.json";
+import mangas from "../mangas.json";
 
 export const getStaticPaths = async () => {
   const paths = mangas.map((manga) => {

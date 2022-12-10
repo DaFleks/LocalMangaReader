@@ -3,7 +3,7 @@ import MangaSelection from '../components/MangaSelection';
 import MangaThumbnail from '../components/MangaThumbnail';
 import Layout from '../components/Layout';
 import MangaContainer from '../components/MangaContainer';
-import * as mangas from '../mangas.json';
+import mangas from '../mangas.json';
 
 export default function Home() {
   //  Cover getters
