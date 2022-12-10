@@ -1,34 +1,32 @@
 import { Grid, Paper, Link, Typography } from "@mui/material";
 
-const MangaThumbnail = ({ id, idx, title, cover, count, toggleCurrentManga, toggleReadChapter, isChapter }) => {
+const MangaThumbnail = ({ id, idx, title, cover, count, readChapter, isChapter }) => {
   const MANGA_PATH = "./manga/";
 
-  const handleCurrentManga = () => {
-    toggleCurrentManga(id);
-  };
-
   const handleCurrentChapter = () => {
-    toggleReadChapter(idx);
+    readChapter(idx);
   };
 
   return (
     <Grid item xs={12} sm={4} md={3}>
-      <Paper variant="elevation" elevation={12} sx={{ display: "flex" }} onClick={!isChapter ? handleCurrentManga : handleCurrentChapter}>
-        <img src={`${MANGA_PATH}${cover}`} alt={title} width="100%" style={{ objectFit: "cover", height: "25rem" }} />
-      </Paper>
+      <Link href={isChapter ? "javascript:void(0)" : id} onClick={isChapter ? handleCurrentChapter : () => {}}>
+        <Paper variant="elevation" elevation={12} sx={{ display: "flex" }}>
+          <img src={`${MANGA_PATH}${cover}`} alt={title} width="100%" style={{ objectFit: "cover", height: "25rem" }} />
+        </Paper>
+      </Link>
+
       <Link
         underline="hover"
-        href="#"
+        href={isChapter ? "#" : id}
         variant="body1"
-        onClick={!isChapter ? handleCurrentManga : handleCurrentChapter}
         mt={2}
         ml={0.5}
-        sx={{ fontWeight: "bold", color: "#8dfc68", display: "block" }}
+        sx={{ fontWeight: "bold", color: "#FFBF00", display: "block" }}
       >
         {title}
       </Link>
-      <Typography onClick={isChapter && handleCurrentChapter} variant="body2" ml={0.5} sx={{ fontWeight: "bold", color: "#bbb" }}>
-        {!isChapter ? `${count} chapters` : `${count}`}
+      <Typography variant="body2" ml={0.5} sx={{ fontWeight: "bold", color: "#bbb" }}>
+        {isChapter ? `${count} pages` : `${count} chapters`}
       </Typography>
     </Grid>
   );
