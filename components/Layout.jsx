@@ -1,30 +1,35 @@
 import { Box, AppBar, Container, Typography } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const Layout = ({ children }) => {
   const wrapper = {
-    background: "linear-gradient(to top, #0f0c29, #302b63, #24243e)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+    background: "linear-gradient(to top, #243B55, #141E30)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
     fallbacks: [
-      { background: "#0f0c29" } /* fallback for old browsers */,
-      { background: "-webkit-linear-gradient(to top, #0f0c29, #302b63, #24243e)" /* Chrome 10-25, Safari 5.1-6 */ },
+      { background: "#141E30" } /* fallback for old browsers */,
+      { background: "-webkit-linear-gradient(to top, #243B55, #141E30)" /* Chrome 10-25, Safari 5.1-6 */ },
     ],
-    minHeight: '100vh',
-    display: 'flex'
+    minHeight: "100vh",
+
+    display: "flex",
+    flexDirection: "column",
+    minWidth: '300px'
   };
 
   return (
     <Box sx={wrapper}>
-      {/* <AppBar position="fixed" sx={{ backgroundColor: "#222", py: 2 }}>
+      <AppBar position="sticky" sx={{ backgroundColor: "#030311", py: 2 }}>
         <Container sx={{ display: "flex", alignItems: "center" }}>
-          <HomeIcon />
+          <MenuBookIcon />
           <Typography variant="h5" sx={{ ml: 1 }}>
-            Local Manga
+            Local Manga Reader
           </Typography>
         </Container>
-      </AppBar> */}
+      </AppBar>
       {children}
     </Box>
   );
 };
 
 export default Layout;
+
+
