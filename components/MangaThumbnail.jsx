@@ -11,7 +11,7 @@ const MangaThumbnail = ({ id, idx, title, cover, count, readChapter, isChapter }
 
   return (
     <Grid item xs={6} sm={3} md={2}>
-      <Link href={isChapter ? "javascript:void(0)" : id} onClick={isChapter ? handleCurrentChapter : () => {}}>
+      <Link href={isChapter ? null : `./${id}`} onClick={isChapter ? handleCurrentChapter : () => {}} sx={{ cursor: "pointer" }}>
         <Paper variant="elevation" elevation={12} sx={{ display: "flex" }}>
           <img src={`${MANGA_PATH}${cover}`} alt={title} width="100%" style={{ objectFit: "cover", height: "18rem" }} />
         </Paper>
@@ -19,7 +19,7 @@ const MangaThumbnail = ({ id, idx, title, cover, count, readChapter, isChapter }
 
       <Link
         underline="hover"
-        href={isChapter ? "javascript:void(0)" : id}
+        href={isChapter ? "#" : id}
         onClick={isChapter ? handleCurrentChapter : () => {}}
         variant="body1"
         mt={2}

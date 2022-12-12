@@ -61,7 +61,13 @@ const Manga = ({ manga }) => {
           </MangaSelection>
         </MangaContainer>
       </Layout>
-      <MangaRead title={manga.title} currentChapter={currentChapter} isReading={isReading} setIsReading={setIsReading} />
+      <MangaRead
+        title={manga.title}
+        currentChapter={currentChapter}
+        isReading={isReading}
+        setIsReading={setIsReading}
+        setCurrentChapter={setCurrentChapter}
+      />
     </>
   );
 };
